@@ -1,7 +1,5 @@
 package org.example.entity;
 
-import java.util.Objects;
-
 public class Employee {
     private int id;
     private String firstname;
@@ -12,6 +10,7 @@ public class Employee {
         this.firstname = firstname;
         this.lastname = lastname;
     }
+
     public int getId() {
         return id;
     }
@@ -19,7 +18,6 @@ public class Employee {
     public String getFirstname() {
         return firstname;
     }
-
 
     public String getLastname() {
         return lastname;
@@ -35,14 +33,14 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return id;
     }
 
     @Override
     public String toString() {
         return "Employee{" +
-                "firstname='" + firstname + '\'' +
-                ", id=" + id +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 '}';
     }

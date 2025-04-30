@@ -5,37 +5,38 @@ import org.example.entity.Employee;
 import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
-        LinkedList<Employee> employees = new LinkedList<>();
-        employees.add(new Employee("John",1 , "Doe"));
-        employees.add(new Employee("Jane", 2, "Doe"));
-        employees.add(new Employee("John",3 , "Doe")); // Duplicate
-        employees.add(new Employee("Mark", 4, "Twain"));
+    // LinkedList tanımlıyorum ve tekrar eden Employee'lar ekliyorum
+    private static final LinkedList<Employee> employees = new LinkedList<>();
 
-        List<Employee> duplicates = findDuplicates(employees);
-        System.out.println("Duplicates: " + duplicates);
-
-        Map<Integer, Employee> uniqueMap = findUniques(employees);
-        System.out.println("Unique Employees: " + uniqueMap);
-
-        List<Employee> filteredList = removeDuplicates(employees);
-        System.out.println("Filtered List (without duplicates): " + filteredList);
+    static {
+        employees.add(new Employee("Dogancan", 1, "Kinik"));
+        employees.add(new Employee("Dogancan", 1, "Kinik")); // Tekrar eden
+        employees.add(new Employee("Seyyit Battal", 2, "Arvas"));
+        employees.add(new Employee("Seyyit Battal", 2, "Arvas")); // Tekrar eden
+        employees.add(new Employee("Seyyit Battal", 3, "Ensari"));
+        employees.add(new Employee("Anil", 3, "Ensari")); // Tekrar eden ID
+        employees.add(new Employee("Burak", 4, "Cevizli"));
     }
 
     public static List<Employee> findDuplicates(List<Employee> list) {
-        List<Employee> duplicates = new ArrayList<>();
-        Set<Integer> seen = new HashSet<>();
-        Set<Integer> duplicatesSet = new HashSet<>();
+        // Tekrar eden elemanları bulmak için bir HashMap kullanıyoruz
+        Map<Integer, Integer> idCount = new HashMap<>();
+        List<Employee> duplicates = new LinkedList<>();
 
-        for (Employee employee : list) {
-            if (!seen.add(employee.getId())) {
-                duplicatesSet.add(employee.getId());
-            }
+        // Her elemanın ID'sini say
+        for (Employee emp : list) {
+            if (emp == null) continue; // Null elemanları atla
+            idCount.put(emp.getId(), idCount.getOrDefault(emp.getId(), 0) + 1);
         }
 
-        for (Employee employee : list) {
-            if (duplicatesSet.contains(employee.getId())) {
-                duplicates.add(employee);
+        // Tekrar edenleri bul ve listeye ekle
+        Set<Integer> addedIds = new HashSet<>(); // Aynı ID'nin birden fazla eklenmesini önlemek için
+        for (Employee emp : list) {
+            if (emp == null) continue;
+            int id = emp.getId();
+            if (idCount.get(id) > 1 && !addedIds.contains(id)) {
+                duplicates.add(emp);
+                addedIds.add(id);
             }
         }
 
@@ -43,21 +44,22 @@ public class Main {
     }
 
     public static Map<Integer, Employee> findUniques(List<Employee> list) {
+        // Tekrar edenlerden bir tane ve tekrar etmeyenleri bulmak için HashMap kullanıyoruz
         Map<Integer, Employee> uniqueMap = new HashMap<>();
-        Set<Integer> seen = new HashSet<>();
-        Set<Integer> duplicatesSet = new HashSet<>();
+        Map<Integer, Integer> idCount = new HashMap<>();
 
-        for (Employee employee : list) {
-            if (!seen.add(employee.getId())) {
-                duplicatesSet.add(employee.getId());
-            }
+        // Her elemanın ID'sini say
+        for (Employee emp : list) {
+            if (emp == null) continue;
+            idCount.put(emp.getId(), idCount.getOrDefault(emp.getId(), 0) + 1);
         }
 
-        for (Employee employee : list) {
-            if (!duplicatesSet.contains(employee.getId())) {
-                uniqueMap.put(employee.getId(), employee);
-            } else if (!uniqueMap.containsKey(employee.getId())) {
-                uniqueMap.put(employee.getId(), employee);
+        // Tekrar edenlerden bir tane ve tekrar etmeyenleri ekle
+        for (Employee emp : list) {
+            if (emp == null) continue;
+            int id = emp.getId();
+            if (!uniqueMap.containsKey(id)) {
+                uniqueMap.put(id, emp);
             }
         }
 
@@ -65,19 +67,39 @@ public class Main {
     }
 
     public static List<Employee> removeDuplicates(List<Employee> list) {
-        List<Employee> filteredList = new ArrayList<>();
-        Map<Integer, Integer> countMap = new HashMap<>();
+        // Tekrar eden elemanları tamamen silip sadece tek geçenleri döndüreceğiz
+        Map<Integer, Integer> idCount = new HashMap<>();
+        List<Employee> result = new LinkedList<>();
 
-        for (Employee employee : list) {
-            countMap.put(employee.getId(), countMap.getOrDefault(employee.getId(), 0) + 1);
+        // Her elemanın ID'sini say
+        for (Employee emp : list) {
+            if (emp == null) continue;
+            idCount.put(emp.getId(), idCount.getOrDefault(emp.getId(), 0) + 1);
         }
 
-        for (Employee employee : list) {
-            if (countMap.get(employee.getId()) == 1) {
-                filteredList.add(employee);
+        // Sadece tek geçen elemanları ekle
+        for (Employee emp : list) {
+            if (emp == null) continue;
+            if (idCount.get(emp.getId()) == 1) {
+                result.add(emp);
             }
         }
 
-        return filteredList;
+        return result;
+    }
+
+    public static void main(String[] args) {
+        // Test için çalışanları yazdır
+        System.out.println("Tüm çalışanlar:");
+        System.out.println(employees);
+
+        System.out.println("\nTekrar eden çalışanlar:");
+        System.out.println(findDuplicates(employees));
+
+        System.out.println("\nUnique çalışanlar (tekrar edenlerden bir tane ve tekrar etmeyenler):");
+        System.out.println(findUniques(employees));
+
+        System.out.println("\nTekrar edenler çıkarıldıktan sonra kalanlar:");
+        System.out.println(removeDuplicates(employees));
     }
 }

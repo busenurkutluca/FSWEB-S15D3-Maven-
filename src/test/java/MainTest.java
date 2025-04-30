@@ -20,13 +20,13 @@ public class MainTest {
 
     @BeforeEach
     void setUp() {
-        employees.add(new Employee(1, "Dogancan", "Kinik"));
-        employees.add(new Employee(1, "Dogancan", "Kinik"));
-        employees.add(new Employee(2, "Seyyit Battal", "Arvas"));
-        employees.add(new Employee(2, "Seyyit Battal", "Arvas"));
-        employees.add(new Employee(3, "Anil", "Ensari"));
-        employees.add(new Employee(3, "Anil", "Ensari"));
-        employees.add(new Employee(4, "Burak", "Cevizli"));
+        employees.add(new Employee("Dogancan",1,  "Kinik"));
+        employees.add(new Employee("Dogancan",1,  "Kinik"));
+        employees.add(new Employee("Seyyit Battal",2,  "Arvas"));
+        employees.add(new Employee("Seyyit Battal",2,  "Arvas"));
+        employees.add(new Employee("Seyyit Battal",3,  "Ensari"));
+        employees.add(new Employee("Anil",3,  "Ensari"));
+        employees.add(new Employee("Burak",4,  "Cevizli"));
         employees.add(null);
     }
 
